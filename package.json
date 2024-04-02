@@ -21,6 +21,7 @@
     "formdata-node": "^6.0.3",
     "got": "^14.2.1",
     "hpagent": "^1.2.0",
+    "luxon": "^3.4.4",
     "tough-cookie": "^4.1.3"
   }
 }

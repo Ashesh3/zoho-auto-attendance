@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import { CronJob } from "cron";
 import { generateCronExpression, log } from "./utils.js";
 import { SessionManager } from "./session.js";
+import { DateTime } from "luxon";
 
 dotenv.config();
 
@@ -48,7 +49,7 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
   const check_in_cron = new CronJob(
     generateCronExpression(check_in_time, excluded_days),
     async () => {
-      if (holiday_list?.includes(new Date().toISOString().split("T")[0])) {
+      if (holiday_list?.includes(DateTime.now().setZone(timezone).toFormat("dd/LL"))) {
         log("INFO", "Today is a holiday");
         return;
       }
@@ -67,34 +68,18 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
       if (!(await session_manager.checkIn(latitude, longitude, accuracy))) {
         log("ERROR", "Failed to check in");
       }
-      log(
-        "INFO",
-        "Checked in successfully. Next check-in at: " +
-          check_in_cron.nextDate().toLocaleString({
-            timeZone: timezone,
-            dateStyle: "short",
-            timeStyle: "long",
-          })
-      );
+      log("INFO", "Checked in successfully. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
     },
     null,
     true,
     timezone
   );
-  log(
-    "INFO",
-    "Check-in cron job scheduled. Next check-in at: " +
-      check_in_cron.nextDate().toLocaleString({
-        timeZone: timezone,
-        dateStyle: "short",
-        timeStyle: "long",
-      })
-  );
+  log("INFO", "Check-in cron job scheduled. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
 
   const check_out_cron = new CronJob(
     generateCronExpression(check_out_time, excluded_days),
     async () => {
-      if (holiday_list?.includes(new Date().toISOString().split("T")[0])) {
+      if (holiday_list?.includes(DateTime.now().setZone(timezone).toFormat("dd/LL"))) {
         log("INFO", "Today is a holiday");
         return;
       }
@@ -113,27 +98,11 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
       if (!(await session_manager.checkOut(latitude, longitude, accuracy))) {
         log("ERROR", "Failed to check out");
       }
-      log(
-        "INFO",
-        "Checked out successfully. Next check-out at: " +
-          check_out_cron.nextDate().toLocaleString({
-            timeZone: timezone,
-            dateStyle: "short",
-            timeStyle: "long",
-          })
-      );
+      log("INFO", "Checked out successfully. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
     },
     null,
     true,
     timezone
   );
-  log(
-    "INFO",
-    "Check-out cron job scheduled. Next check-out at: " +
-      check_out_cron.nextDate().toLocaleString({
-        timeZone: timezone,
-        dateStyle: "short",
-        timeStyle: "long",
-      })
-  );
+  log("INFO", "Check-out cron job scheduled. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
 })();

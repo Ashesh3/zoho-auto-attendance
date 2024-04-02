@@ -1,11 +1,8 @@
-const getLocalTimeString = () => {
-  const tzoffset = new Date().getTimezoneOffset() * 60000;
-  const suffix = new Date().toLocaleTimeString("en-us", { timeZoneName: "short" }).split(" ")[2];
-  return new Date(Date.now() - tzoffset).toISOString().slice(0, -1) + suffix;
-};
+import { DateTime } from "luxon";
 
-export const log = (severity: string, message: string) => {
-  console.log(`[${getLocalTimeString()}] (${severity}) ${message}`);
+export const log = (severity: string, message: string, tzone = "local") => {
+  const time = DateTime.now().setZone(tzone)
+  console.log(`[${time.setLocale('en-gb').toLocaleString(DateTime.DATE_SHORT)}, ${time.toLocaleString(DateTime.TIME_WITH_SHORT_OFFSET)}] (${severity}) ${message}`);
 };
 
 export const generateCronExpression = (time: string, excludedDays: string[]) => {
