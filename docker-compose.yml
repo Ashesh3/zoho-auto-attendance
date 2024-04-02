@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    image: zoho-attendance
+    env_file: 
+      - .env
+    restart: unless-stopped

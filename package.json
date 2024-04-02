@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "zoho-attendance",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "author": "Ashesh3",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "@types/tough-cookie": "^4.0.5",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "cron": "^3.1.6",
+    "dotenv": "^16.4.5",
+    "formdata-node": "^6.0.3",
+    "got": "^14.2.1",
+    "hpagent": "^1.2.0",
+    "tough-cookie": "^4.1.3"
+  }
+}
