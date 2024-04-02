@@ -52,7 +52,7 @@ This table provides a clear and comprehensive overview of all the variables requ
 
 *Notes:*
 - `PROXY` is optional and is only required for IP spoofing.
-- `EXCLUDED_DAYS` specifies the days of the week when attendance should not be marked. Use abbreviations (Mon, Tue, Wed, Thu, Fri, Sat, Sun).
+- `EXCLUDED_DAYS` specifies the days of the week when attendance should not be marked. Use full names (monday, tuesday, wednesday, thursday, friday, saturday, sunday).
 - `HOLIDAY_LIST` specifies dates in `dd/mm` format, separated by commas, on which the attendance should not be marked.
 
 ## Docker Container Setup (Docker Compose)
