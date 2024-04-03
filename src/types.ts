@@ -252,3 +252,83 @@ export interface Filo {
 }
 
 export interface CurDayBreakDetails {}
+
+export interface CheckOutResponse {
+  punchOut: PunchOut
+}
+
+export interface PunchOut {
+  inputType_out: number
+  tdate: string
+  dateFormat: string
+  latitude: number
+  fdate: string
+  dayList: DayList
+  tsecs: number
+  longitude: number
+}
+
+export interface DayList {
+  "0": N0
+  fromRowAttId: string
+  toRowAttId: string
+}
+
+export interface N0 {
+  totalPermissionHours: string
+  tHrs: string
+  totalUnPaidBreakHours: string
+  orgdate: string
+  attenid: string
+  shift: Shift
+  totalPaidBreakInSecs: number
+  totalPaidBreakHours: string
+  isToday: boolean
+  totalPermissionInSecs: number
+  filo: Filo
+  overTime_tsecs: number
+  lateNight_overtTime_tsecs: number
+  tsecs: number
+  userTimeZone: string
+  totalUnPaidBreakInSecs: number
+  ldate: string
+  wsecs: number
+  day: number
+  attDate: string
+  showAllowanceColumn: boolean
+  status: string
+}
+
+export interface Shift {
+  shiftId: string
+  shiftName: string
+  select: number
+  fTime: number
+  sName: string
+  nonWorkingMins: number
+  colorCode: number
+  from: string
+  tTime: number
+  allowanceEnabled: number
+}
+
+export interface Filo {
+  ftime: string
+  intime: number
+  outime: number
+  roundedOffFirstIn: string
+  deviationIn: number
+  longitude_out: number
+  expectedFromtime: string
+  latitude_out: number
+  tdate: string
+  checkin: string
+  roundedOffLastOut: string
+  expectedIn: number
+  geoLocation_in: string
+  fdate: string
+  ttime: string
+  geoLocation_out: string
+  checkout: string
+  earlyLateCheckIn: string
+}

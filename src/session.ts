@@ -1,4 +1,4 @@
-import { AttendanceMonthlyReport, CheckInResponse, LoginResponse, PreLoginResponse } from "./types.js";
+import { AttendanceMonthlyReport, CheckInResponse, CheckOutResponse, LoginResponse, PreLoginResponse } from "./types.js";
 import { log } from "./utils.js";
 import { CookieJar } from "tough-cookie";
 import got from "got";
@@ -147,7 +147,7 @@ export class SessionManager {
 
       const checkInResponse = JSON.parse(checkInRes.body) as CheckInResponse;
 
-      if (!checkInResponse.msg.currentPunchinAttenId) {
+      if (!checkInResponse?.msg?.currentPunchinAttenId) {
         log("ERROR", "Failed to check in: " + JSON.stringify(checkInResponse));
         return false;
       }
@@ -167,14 +167,14 @@ export class SessionManager {
         return false;
       }
 
-      const checkInData = new FormData();
-      checkInData.append("conreqcsr", csrfToken);
-      checkInData.append("urlMode", "attendance_entry_listview");
-      checkInData.append("latitude", latitude.toString());
-      checkInData.append("longitude", longitude.toString());
-      checkInData.append("accuracy", accuracy.toString());
+      const checkOutData = new FormData();
+      checkOutData.append("conreqcsr", csrfToken);
+      checkOutData.append("urlMode", "attendance_entry_listview");
+      checkOutData.append("latitude", latitude.toString());
+      checkOutData.append("longitude", longitude.toString());
+      checkOutData.append("accuracy", accuracy.toString());
 
-      const checkInRes = await got.post(`https://peopleplus.zoho.in/${this.orgID}/AttendanceAction.zp?mode=punchOut`, {
+      const checkOutRes = await got.post(`https://peopleplus.zoho.in/${this.orgID}/AttendanceAction.zp?mode=punchOut`, {
         agent: this.proxyAgent ? { https: this.proxyAgent } : undefined,
         headers: {
           Host: "peopleplus.zoho.in",
@@ -185,18 +185,18 @@ export class SessionManager {
           Origin: "https://peopleplus.zoho.in",
           Referer: `https://peopleplus.zoho.in/${this.orgID}/zp`,
         },
-        body: checkInData,
+        body: checkOutData,
         cookieJar: this.cookieJar,
       });
 
-      if (checkInRes.statusCode !== 200) {
-        log("ERROR", "Failed to check in: " + checkInRes.body);
+      if (checkOutRes.statusCode !== 200) {
+        log("ERROR", "Failed to check in: " + checkOutRes.body);
         return false;
       }
 
-      const checkInResponse = JSON.parse(checkInRes.body) as CheckInResponse;
+      const checkInResponse = JSON.parse(checkOutRes.body) as CheckOutResponse;
 
-      if (!checkInResponse.msg.currentPunchinAttenId) {
+      if (!checkInResponse?.punchOut?.tdate) {
         log("ERROR", "Failed to check in: " + JSON.stringify(checkInResponse));
         return false;
       }
@@ -214,17 +214,20 @@ export class SessionManager {
   async login(email: string, password: string) {
     log("INFO", "Logging in...");
     log("INFO", "Fetching cookies...");
-    const cookieFetchResponse = await got.get("https://accounts.zoho.in/signin?servicename=Peopleplus&signupurl=https://www.zoho.in/peopleplus/signup.html", {
-      agent: this.proxyAgent ? { https: this.proxyAgent } : undefined,
-      headers: {
-        Host: "accounts.zoho.in",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-        Referer: "https://www.zoho.com/",
-      },
-      cookieJar: this.cookieJar,
-    });
+    const cookieFetchResponse = await got.get(
+      "https://accounts.zoho.in/signin?servicename=Peopleplus&signupurl=https://www.zoho.in/peopleplus/signup.html",
+      {
+        agent: this.proxyAgent ? { https: this.proxyAgent } : undefined,
+        headers: {
+          Host: "accounts.zoho.in",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+          "Accept-Language": "en-US,en;q=0.5",
+          Referer: "https://www.zoho.com/",
+        },
+        cookieJar: this.cookieJar,
+      }
+    );
 
     if (cookieFetchResponse.statusCode !== 200) {
       log("ERROR", "Failed to fetch cookies: " + cookieFetchResponse.statusCode + " " + cookieFetchResponse.body);

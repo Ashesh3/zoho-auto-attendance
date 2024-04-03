@@ -53,7 +53,9 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
         log("INFO", "Today is a holiday");
         return;
       }
+
       log("INFO", "Checking Session Validity...");
+
       if (!(await session_manager.validateSession())) {
         log("ERROR", "Failed to validate session. Re-logging in...");
         if (!(await session_manager.login(email, password))) {
@@ -64,17 +66,40 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
       } else {
         log("INFO", "Session Already Valid");
       }
+
       log("INFO", "Checking in...");
+
       if (!(await session_manager.checkIn(latitude, longitude, accuracy))) {
         log("ERROR", "Failed to check in");
+        log("INFO", "Trying to refresh session...");
+
+        if (!(await session_manager.login(email, password))) {
+          log("ERROR", "Failed to refresh session");
+          return;
+        }
+
+        log("INFO", "Session refreshed successfully");
+        log("INFO", "Checking in again...");
+
+        if (!(await session_manager.checkIn(latitude, longitude, accuracy))) {
+          log("ERROR", "Attempt 2: Failed to check in");
+          return;
+        }
       }
-      log("INFO", "Checked in successfully. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
+
+      log(
+        "INFO",
+        "Checked in successfully. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+      );
     },
     null,
     true,
     timezone
   );
-  log("INFO", "Check-in cron job scheduled. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
+  log(
+    "INFO",
+    "Check-in cron job scheduled. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+  );
 
   const check_out_cron = new CronJob(
     generateCronExpression(check_out_time, excluded_days),
@@ -83,7 +108,9 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
         log("INFO", "Today is a holiday");
         return;
       }
+
       log("INFO", "Checking Session Validity...");
+
       if (!(await session_manager.validateSession())) {
         log("ERROR", "Failed to validate session. Re-logging in...");
         if (!(await session_manager.login(email, password))) {
@@ -94,15 +121,38 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
       } else {
         log("INFO", "Session Already Valid");
       }
+
       log("INFO", "Checking out...");
+
       if (!(await session_manager.checkOut(latitude, longitude, accuracy))) {
         log("ERROR", "Failed to check out");
+        log("INFO", "Trying to refresh session...");
+
+        if (!(await session_manager.login(email, password))) {
+          log("ERROR", "Failed to refresh session");
+          return;
+        }
+
+        log("INFO", "Session refreshed successfully");
+        log("INFO", "Checking out again...");
+
+        if (!(await session_manager.checkOut(latitude, longitude, accuracy))) {
+          log("ERROR", "Attempt 2: Failed to check out");
+          return;
+        }
       }
-      log("INFO", "Checked out successfully. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
+
+      log(
+        "INFO",
+        "Checked out successfully. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+      );
     },
     null,
     true,
     timezone
   );
-  log("INFO", "Check-out cron job scheduled. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED));
+  log(
+    "INFO",
+    "Check-out cron job scheduled. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+  );
 })();
