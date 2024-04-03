@@ -89,7 +89,9 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
 
       log(
         "INFO",
-        "Checked in successfully. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+        "Checked in successfully. Next check-in at: " +
+          check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED) +
+          " (Unless it's a holiday)"
       );
     },
     null,
@@ -98,7 +100,9 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
   );
   log(
     "INFO",
-    "Check-in cron job scheduled. Next check-in at: " + check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+    "Check-in cron job scheduled. Next check-in at: " +
+      check_in_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED) +
+      " (Unless it's a holiday)"
   );
 
   const check_out_cron = new CronJob(
@@ -144,7 +148,9 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
 
       log(
         "INFO",
-        "Checked out successfully. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+        "Checked out successfully. Next check-out at: " +
+          check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED) +
+          " (Unless it's a holiday)"
       );
     },
     null,
@@ -153,6 +159,8 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
   );
   log(
     "INFO",
-    "Check-out cron job scheduled. Next check-out at: " + check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED)
+    "Check-out cron job scheduled. Next check-out at: " +
+      check_out_cron.nextDate().setZone(timezone).toLocaleString(DateTime.DATETIME_MED) +
+      " (Unless it's a holiday)"
   );
 })();
