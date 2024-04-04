@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
-export const log = (severity: string, message: string, tzone = "local") => {
-  const time = DateTime.now().setZone(tzone)
+export const log = (severity: string, message: string) => {
+  const time = DateTime.now().setZone(process.env.TIMEZONE ?? "local")
   console.log(`[${time.setLocale('en-gb').toLocaleString(DateTime.DATE_SHORT)}, ${time.toLocaleString(DateTime.TIME_WITH_SHORT_OFFSET)}] (${severity}) ${message}`);
 };
 
