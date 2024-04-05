@@ -44,10 +44,13 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
     log("ERROR", "Failed to login");
     process.exit(1);
   }
+
   log("INFO", "Logged in as " + (await session_manager.getCurrentUser()));
+  const check_in_cron_exp = generateCronExpression(check_in_time, excluded_days);
+  log("INFO", "Check-in cron expression: " + check_in_cron_exp);
 
   const check_in_cron = new CronJob(
-    generateCronExpression(check_in_time, excluded_days),
+    check_in_cron_exp,
     async () => {
       if (holiday_list?.includes(DateTime.now().setZone(timezone).toFormat("dd/LL"))) {
         log("INFO", "Today is a holiday");
@@ -105,8 +108,12 @@ log("INFO", "Proxy: " + (proxy ?? "None"));
       " (Unless it's a holiday)"
   );
 
+  log("INFO", "Logged in as " + (await session_manager.getCurrentUser()));
+  const check_out_cron_exp = generateCronExpression(check_out_time, excluded_days);
+  log("INFO", "Check-in cron expression: " + check_in_cron_exp);
+
   const check_out_cron = new CronJob(
-    generateCronExpression(check_out_time, excluded_days),
+    check_out_cron_exp,
     async () => {
       if (holiday_list?.includes(DateTime.now().setZone(timezone).toFormat("dd/LL"))) {
         log("INFO", "Today is a holiday");
